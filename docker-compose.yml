@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: stock-reading-postgres
+    environment:
+      POSTGRES_DB: stock_reading
+      POSTGRES_USER: stock_reading
+      # .env 의 DB_PASSWORD 를 읽음. 없으면 뒤 메시지와 함께 중단된다.
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD 가 .env 에 없습니다}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stock_reading -d stock_reading"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7
+    container_name: stock-reading-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  postgres-data:
+  redis-data:

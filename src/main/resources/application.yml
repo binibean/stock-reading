@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: stock-reading
+
+  # .env 를 설정값으로 읽어들인다.
+  # optional: → 파일이 없어도 기동 실패하지 않음 (CI·배포 서버에는 .env 가 없다)
+  config:
+    import: optional:file:.env[.properties]
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/stock_reading
+    username: stock_reading
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      # 스키마는 Flyway 가 관리한다. JPA 는 검증만 하고 손대지 않는다.
+      ddl-auto: validate
+    # 기본값 true. 켜두면 응답이 끝날 때까지 DB 커넥션을 붙잡아 풀이 고갈된다.
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      # DB · Redis 연결 상태까지 보이게 한다
+      show-details: always
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

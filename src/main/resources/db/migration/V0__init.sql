@@ -1,0 +1,2 @@
+-- Flyway 동작 확인용 초기 마이그레이션.
+-- 실제 테이블은 V1 부터 각 이슈에서 추가한다. (#2 glossary_term, #7 guide_article, ...)
