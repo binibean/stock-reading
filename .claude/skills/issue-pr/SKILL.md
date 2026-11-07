@@ -116,7 +116,8 @@ Closes #N
 
 ## 6. 머지
 
-CI 통과를 확인하고 **Squash merge**.
+CI 통과를 확인하고 **Squash merge** 한다. 이 스킬은 feature → develop 만 다룬다.
+develop → main 은 MVP 가 끝났을 때 merge commit 으로 머지한다.
 
 > **PR 을 머지 없이 닫으면 브랜치의 작업이 통째로 사라진다.**
 > 2026-09-09 에 PR #50 을 닫고 브랜치를 지워 초기 세팅 8개 파일이 사라졌다.
@@ -133,4 +134,4 @@ git checkout develop && git pull
 git branch -d feature/N-<설명>
 ```
 
-이슈는 `Closes #N` 으로 자동으로 닫힌다.
+`develop` 이 저장소 기본 브랜치이므로 이슈는 `Closes #N` 으로 자동으로 닫힌다.

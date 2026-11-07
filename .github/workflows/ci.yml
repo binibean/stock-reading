@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+# 코드를 읽기만 한다. 저장소에 쓸 권한을 주지 않는다.
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: build & test
+    runs-on: ubuntu-latest
+
+    # 테스트가 실제 DB·Redis 에 붙으므로 운영과 같은 버전을 띄운다
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: stock_reading
+          POSTGRES_USER: stock_reading
+          POSTGRES_PASSWORD: ci_test_password
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U stock_reading -d stock_reading"
+          --health-interval 5s --health-timeout 3s --health-retries 15
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 3s --health-retries 15
+
+    env:
+      # CI 전용 값. 실제 비밀번호가 아니며 .env 는 저장소에 없다.
+      DB_PASSWORD: ci_test_password
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          # 기본값 enhanced 는 사용 시 약관 수락으로 간주되는 상용 캐시다. 오픈소스 쪽을 쓴다.
+          cache-provider: basic
+
+      - name: Test
+        run: ./gradlew test --no-daemon
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-report
+          path: build/reports/tests/test
+          if-no-files-found: ignore
