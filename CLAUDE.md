@@ -93,11 +93,15 @@ main                배포된 상태 (보호: PR 필수 + CI 통과 필수)
   ↑ MVP 완료 시 PR (merge commit)
 develop             통합 브랜치, 저장소 기본 브랜치
   ↑ 이슈 완료 시 PR (merge commit)
-feature/<이슈번호>-<설명>     예) feature/12-calendar-event-entity
+<type>/<이슈번호>-<영문-설명>   예) feat/12-calendar-event-entity, test/20-mvp1-tests
 ```
 
+- 브랜치 type 은 커밋 타입과 같은 목록에서 이슈 성격에 맞게 고른다
+  `feat` 기능 · `fix` 버그 · `refactor` 구조 변경 · `docs` 문서·회고 · `test` 테스트 · `chore` 설정·배포
+  라벨이 아니라 이슈 내용을 보고 고른다 (라벨이 실제 작업과 다른 이슈가 있다)
+  설명은 이슈 제목을 영문 2~4단어 kebab-case 로 줄인다. 번호 앞에 `#` 을 붙이지 않는다 (셸 · URL 에서 특수문자)
 - 커밋: Conventional Commits — `feat` `fix` `chore` `docs` `test` `refactor`
-  feature 의 커밋이 그대로 develop 에 남으므로 의미 단위로 나눈다
+  작업 브랜치의 커밋이 그대로 develop 에 남으므로 의미 단위로 나눈다
 - PR 본문에 **왜 그렇게 했는지**를 반드시 남긴다. `Closes #N` 으로 이슈를 연결한다
   (`develop` 이 기본 브랜치라 PR 이 머지되면 이슈가 자동으로 닫힌다)
 - 머지는 모든 방향에서 merge commit 이다. Squash · Rebase 는 쓰지 않는다.
