@@ -12,6 +12,8 @@
 
 # Package Files #
 *.jar
+# wrapper 는 ./gradlew 실행에 필요하다. 빠지면 CI 가 빌드 전에 실패한다.
+!gradle/wrapper/gradle-wrapper.jar
 *.war
 *.nar
 *.ear

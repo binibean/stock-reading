@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: stock-reading-postgres
+    environment:
+      POSTGRES_DB: stock_reading
+      POSTGRES_USER: stock_reading
+      # .env 의 DB_PASSWORD 를 읽음. 없으면 뒤 메시지와 함께 중단된다.
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD 가 .env 에 없습니다}
+    ports:
+      # 127.0.0.1 → 내 맥에서만 접속된다. 없으면 같은 네트워크의 다른 기기에도 열린다.
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stock_reading -d stock_reading"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7
+    container_name: stock-reading-redis
+    ports:
+      # 왼쪽(내 맥 쪽 포트)만 바뀐다. 컨테이너 안쪽은 항상 6379.
+      # Redis 는 비밀번호가 없어서 127.0.0.1 제한이 특히 중요하다.
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  postgres-data:
+  redis-data:
