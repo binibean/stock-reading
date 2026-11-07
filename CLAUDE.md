@@ -90,18 +90,23 @@ HTTP 상태코드와 `success` 가 어긋나지 않도록 **한 곳에서만** �
 
 ```
 main                배포된 상태 (보호: PR 필수 + CI 통과 필수)
-  ↑ MVP 완료 시 (merge commit)
+  ↑ MVP 완료 시 PR (merge commit)
 develop             통합 브랜치, 저장소 기본 브랜치
-  ↑ 이슈 완료 시 PR (Squash merge)
+  ↑ 이슈 완료 시 PR (merge commit)
 feature/<이슈번호>-<설명>     예) feature/12-calendar-event-entity
 ```
 
 - 커밋: Conventional Commits — `feat` `fix` `chore` `docs` `test` `refactor`
+  feature 의 커밋이 그대로 develop 에 남으므로 의미 단위로 나눈다
 - PR 본문에 **왜 그렇게 했는지**를 반드시 남긴다. `Closes #N` 으로 이슈를 연결한다
   (`develop` 이 기본 브랜치라 PR 이 머지되면 이슈가 자동으로 닫힌다)
-- 머지 방식은 방향마다 다르다. feature → develop 은 Squash merge, develop → main 은 merge commit.
-  main 까지 squash 하면 develop 이 그 커밋을 몰라서 다음 MVP PR 에 이미 반영한 변경이 다시 보이거나 충돌한다.
-  그래서 main 보호 규칙에는 Require linear history 를 켜지 않는다
+- 머지는 모든 방향에서 merge commit 이다. Squash · Rebase 는 쓰지 않는다.
+  squash 는 커밋을 새로 만들어 해시가 바뀐다. 계속 쓰는 develop 을 main 에 squash 하면
+  develop 이 그 커밋을 몰라서 다음 MVP PR 에 이미 반영한 변경이 다시 보이거나 충돌한다.
+  방향마다 예외를 두지 않으려고 하나로 통일했다.
+  - 이슈 단위로 보기: `git log --first-parent develop`
+  - 이슈 하나 되돌리기: `git revert -m 1 <머지 커밋>`
+- 그래서 main · develop 보호 규칙에는 Require linear history 를 켜지 않는다 (켜면 merge commit 이 막힌다)
 - 이슈 번호 순서대로 진행한다 (#1 → #49)
 
 ## 설계 원칙
