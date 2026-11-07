@@ -47,12 +47,16 @@ gh issue view N
 
 ## 2. 브랜치
 
+이슈 내용을 보고 type 을 고른다 (CLAUDE.md 브랜치 전략의 목록). 라벨은 기준으로 쓰지 않는다.
+
 ```bash
 git checkout develop && git pull
-git checkout -b feature/N-<영문-설명>
+git checkout -b <type>/N-<영문-설명>
 ```
 
-예) `feature/2-glossary-term-entity`
+예) `feat/2-glossary-term-entity`, `test/20-mvp1-tests`, `chore/21-deploy-env-check`
+
+제안할 때 브랜치 이름과 함께 **왜 그 type 인지** 한 줄로 밝힌다.
 
 **⛔ 브랜치 생성 전에 승인받는다.**
 
@@ -61,7 +65,7 @@ git checkout -b feature/N-<영문-설명>
 Conventional Commits — `feat` `fix` `chore` `docs` `test` `refactor`
 
 제목은 한 줄, 본문에 무엇을 왜 바꿨는지. 커밋은 의미 단위로 나눈다.
-merge commit 으로 머지하므로 feature 의 커밋이 그대로 develop 에 남는다.
+merge commit 으로 머지하므로 작업 브랜치의 커밋이 그대로 develop 에 남는다.
 
 **⛔ 파일을 만들기 전에 무엇을 왜 만드는지 설명하고 승인받는다.**
 **⛔ 커밋 메시지 초안을 보여주고 승인받은 뒤 커밋한다.**
@@ -118,7 +122,7 @@ Closes #N
 
 CI 통과를 확인하고 **merge commit** (Create a merge commit) 으로 머지한다.
 Squash · Rebase 는 쓰지 않는다 (이유는 CLAUDE.md 브랜치 전략).
-이 스킬은 feature → develop 만 다룬다. develop → main 은 MVP 가 끝났을 때 같은 방식으로 머지한다.
+이 스킬은 작업 브랜치 → develop 만 다룬다. develop → main 은 MVP 가 끝났을 때 같은 방식으로 머지한다.
 
 > **PR 을 머지 없이 닫으면 브랜치의 작업이 통째로 사라진다.**
 > 2026-09-09 에 PR #50 을 닫고 브랜치를 지워 초기 세팅 8개 파일이 사라졌다.
@@ -132,7 +136,7 @@ Squash · Rebase 는 쓰지 않는다 (이유는 CLAUDE.md 브랜치 전략).
 
 ```bash
 git checkout develop && git pull
-git branch -d feature/N-<설명>
+git branch -d <type>/N-<영문-설명>
 ```
 
 `develop` 이 저장소 기본 브랜치이므로 이슈는 `Closes #N` 으로 자동으로 닫힌다.
